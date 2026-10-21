@@ -50,7 +50,7 @@ class CreditWorkflowTest extends TestCase
             'bukti_tanda_jadi' => UploadedFile::fake()->create('tanda-jadi.pdf', 100, 'application/pdf'),
         ])->assertCreated();
 
-        $application = CreditApplication::firstOrFail();
+        $application = CreditApplication::whereHas('customer', fn ($query) => $query->where('nik', '1234567890123456'))->firstOrFail();
         $this->assertSame('submitted', $application->status);
         $this->assertCount(3, $application->documents);
         $this->postJson("/api/applications/{$application->id}/decision", ['decision' => 'approved'])->assertForbidden();

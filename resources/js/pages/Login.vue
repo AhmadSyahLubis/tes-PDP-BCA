@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from '../api';
 import { auth } from '../auth';
@@ -9,6 +9,13 @@ const username = ref('');
 const password = ref('');
 const error = ref('');
 const busy = ref(false);
+const usernameEditable = ref(false);
+const passwordEditable = ref(false);
+
+onMounted(() => {
+    username.value = '';
+    password.value = '';
+});
 
 async function submit() {
     error.value = '';
@@ -28,6 +35,6 @@ async function submit() {
 <template>
     <div class="login-wrap">
         <div class="login-intro"><p class="eyebrow">PT. JKL</p><h1>Pengajuan kredit kendaraan</h1><p>Catat pengajuan, beri keputusan, dan proses dokumen dalam satu alur kerja.</p></div>
-        <form class="paper login-form" @submit.prevent="submit"><h2>Masuk ke portal</h2><p v-if="error" class="error-box" role="alert">{{ error }}</p><label for="username">Username</label><input id="username" v-model="username" required autocomplete="username" autofocus><label for="password">Kata sandi</label><input id="password" v-model="password" type="password" required autocomplete="current-password"><button class="button primary full" :disabled="busy" type="submit">{{ busy ? 'Memproses…' : 'Masuk' }}</button></form>
+        <form class="paper login-form" autocomplete="off" @submit.prevent="submit"><h2>Masuk ke portal</h2><p v-if="error" class="error-box" role="alert">{{ error }}</p><label for="username">Username</label><input id="username" v-model="username" name="login_user" required autocomplete="off" :readonly="!usernameEditable" @focus="usernameEditable = true"><label for="password">Kata sandi</label><input id="password" v-model="password" name="login_password" type="password" required autocomplete="off" :readonly="!passwordEditable" @focus="passwordEditable = true"><button class="button primary full" :disabled="busy" type="submit">{{ busy ? 'Memproses…' : 'Masuk' }}</button></form>
     </div>
 </template>

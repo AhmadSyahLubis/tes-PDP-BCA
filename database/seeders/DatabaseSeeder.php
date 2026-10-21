@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        if (app()->isProduction()) {
+        if (app()->isProduction() && ! config('demo.seed')) {
             return;
         }
 
@@ -49,5 +49,7 @@ class DatabaseSeeder extends Seeder
                 'group_id' => $groups[$code]->id, 'branch_id' => $branch->id, 'is_active' => true,
             ]);
         }
+
+        $this->call(DemoCreditApplicationSeeder::class);
     }
 }
